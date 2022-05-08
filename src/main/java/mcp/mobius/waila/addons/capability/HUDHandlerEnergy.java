@@ -1,9 +1,9 @@
 package mcp.mobius.waila.addons.capability;
 
-import mcp.mobius.waila.api.ITaggedList;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
+import mcp.mobius.waila.addons.capability.compat.IBigPower;
+import mcp.mobius.waila.addons.capability.compat.RedstoneFluxTools;
+import mcp.mobius.waila.addons.capability.compat.TeslaTools;
+import mcp.mobius.waila.api.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -23,15 +24,52 @@ public class HUDHandlerEnergy implements IWailaDataProvider {
     @Nonnull
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        TileEntity te = accessor.getTileEntity();
         if (!config.getConfig("capability.energyinfo") || accessor.getTileEntity() == null)
             return currenttip;
 
-        if (accessor.getNBTData().hasKey("forgeEnergy")) {
-            NBTTagCompound energyTag = accessor.getNBTData().getCompoundTag("forgeEnergy");
-            int stored = energyTag.getInteger("stored");
-            int capacity = energyTag.getInteger("capacity");
+        if (te == null || !te.hasCapability(CapabilityEnergy.ENERGY, null))
+            return currenttip;
 
-            ((ITaggedList<String, String>) currenttip).add(String.format("%d / %d FE", stored, capacity), "IEnergyStorage");
+        if (TeslaTools.isEnergyHandler(te)) {
+            long stored = TeslaTools.getEnergy(te);
+            long capacity = TeslaTools.getMaxEnergy(te);
+
+            currenttip.add(SpecialChars.getRenderString("waila.progress.energy.RF", String.valueOf(stored), String.valueOf(capacity)));
+
+            return currenttip;
+        }
+        else if (te instanceof IBigPower) {
+            long stored = ((IBigPower) te).getStoredPower();
+            long capacity = ((IBigPower) te).getCapacity();
+
+            currenttip.add(SpecialChars.getRenderString("waila.progress.energy.RF", String.valueOf(stored), String.valueOf(capacity)));
+
+            return currenttip;
+        }
+        else if (RedstoneFluxTools.isEnergyHandler(te)) {
+            int stored = RedstoneFluxTools.getEnergy(te);
+            int capacity = RedstoneFluxTools.getMaxEnergy(te);
+
+            currenttip.add(SpecialChars.getRenderString("waila.progress.energy.RF", String.valueOf(stored), String.valueOf(capacity)));
+
+            return currenttip;
+        }
+        else if (te != null && te.hasCapability(CapabilityEnergy.ENERGY, null)) {
+            net.minecraftforge.energy.IEnergyStorage handler = te.getCapability(CapabilityEnergy.ENERGY, null);
+            if (handler != null) {
+                currenttip.add(SpecialChars.getRenderString("waila.progress.energy.RF", String.valueOf(handler.getEnergyStored()), String.valueOf(handler.getMaxEnergyStored())));
+
+                return currenttip;
+            }
+        }
+        else if (accessor.getNBTData().hasKey("forgeEnergy")) {
+            NBTTagCompound energyTag = accessor.getNBTData().getCompoundTag("forgeEnergy");
+            long stored = energyTag.getInteger("stored");
+            long capacity = energyTag.getInteger("capacity");
+
+            currenttip.add(SpecialChars.getRenderString("waila.progress.energy.RF", String.valueOf(stored), String.valueOf(capacity)));
+
             return currenttip;
         }
 

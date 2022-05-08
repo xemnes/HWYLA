@@ -1,9 +1,7 @@
 package mcp.mobius.waila.addons.capability;
 
-import mcp.mobius.waila.api.ITaggedList;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
+import mcp.mobius.waila.api.*;
+import mcp.mobius.waila.overlay.DisplayUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,10 +37,10 @@ public class HUDHandlerTank implements IWailaDataProvider {
         for (int i = 0; i < tanks.tagCount(); i++) {
             NBTTagCompound tankInfo = tanks.getCompoundTagAt(i);
             FluidStack contents = FluidStack.loadFluidStackFromNBT(tankInfo.getCompoundTag("fluid"));
-            int capacity = tankInfo.getInteger("capacity");
+            long capacity = tankInfo.getLong("capacity");
 
             if (fluidCount <= 5) {
-                ((ITaggedList<String, String>) currenttip).add(String.format("%s: %d / %d mB", contents.getLocalizedName(), contents.amount, capacity), "IFluidHandler");
+                currenttip.add(SpecialChars.getRenderString("waila.progress.fluid", String.valueOf((long) contents.amount), String.valueOf(capacity), contents.getLocalizedName(), "IEnergyStorage"));
                 fluidCount++;
             } else
                 ((ITaggedList<String, String>) currenttip).add(I18n.translateToLocal("hud.msg.toomuch"), "IFluidHandler");

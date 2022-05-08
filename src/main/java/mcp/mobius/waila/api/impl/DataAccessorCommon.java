@@ -61,7 +61,7 @@ public class DataAccessorCommon implements IWailaCommonAccessor, IWailaDataAcces
             this.stack = block.getPickBlock(state, mop, world, pos, player);
             //noinspection ConstantConditions
             if (stack == null)
-                throw new NullPointerException(block.getRegistryName() + " from mod " + ModIdentification.findModContainer(block.getRegistryName().getResourceDomain()).getName() + " returned a null ItemStack in getPickBlock(...). Please report this to them.");
+                throw new NullPointerException(block.getRegistryName() + " from mod " + ModIdentification.findModContainer(block.getRegistryName().getNamespace()).getName() + " returned a null ItemStack in getPickBlock(...). Please report this to them.");
 
         } else if (this.mop.typeOfHit == RayTraceResult.Type.ENTITY) {
             this.pos = new BlockPos(_mop.entityHit);

@@ -3,9 +3,7 @@ package mcp.mobius.waila.proxy;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
 import mcp.mobius.waila.client.KeyEvent;
 import mcp.mobius.waila.config.ColorConfig;
-import mcp.mobius.waila.overlay.tooltiprenderers.TTRenderHealth;
-import mcp.mobius.waila.overlay.tooltiprenderers.TTRenderProgressBar;
-import mcp.mobius.waila.overlay.tooltiprenderers.TTRenderStack;
+import mcp.mobius.waila.overlay.tooltiprenderers.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -33,5 +31,7 @@ public class ProxyClient extends ProxyCommon {
         ModuleRegistrar.instance().registerTooltipRenderer("waila.health", new TTRenderHealth());
         ModuleRegistrar.instance().registerTooltipRenderer("waila.stack", new TTRenderStack());
         ModuleRegistrar.instance().registerTooltipRenderer("waila.progress", new TTRenderProgressBar());
+        ModuleRegistrar.instance().registerTooltipRenderer("waila.progress.energy.RF", new TTRenderEnergyBarRF());
+        ModuleRegistrar.instance().registerTooltipRenderer("waila.progress.fluid", new TTRenderFluidBar());
     }
 }

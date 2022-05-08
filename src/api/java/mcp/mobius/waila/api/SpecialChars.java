@@ -83,4 +83,5 @@ public class SpecialChars {
         result += "}" + WailaSplitter;
         return result;
     }
+
 }

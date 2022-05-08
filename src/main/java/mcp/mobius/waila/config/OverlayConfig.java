@@ -24,6 +24,7 @@ public class OverlayConfig {
     public static int bgcolor;
     public static int gradient1;
     public static int gradient2;
+    public static int uncolored;
     public static int fontcolor;
     public static float scale;
 
@@ -39,6 +40,7 @@ public class OverlayConfig {
         OverlayConfig.gradient1 = OverlayConfig.alpha + ConfigHandler.instance().getConfig(Configuration.CATEGORY_GENERAL, Constants.CFG_WAILA_GRADIENT1, 0x5000ff);
         OverlayConfig.gradient2 = OverlayConfig.alpha + ConfigHandler.instance().getConfig(Configuration.CATEGORY_GENERAL, Constants.CFG_WAILA_GRADIENT2, 0x28007f);
         OverlayConfig.fontcolor = ConfigHandler.instance().getConfig(Configuration.CATEGORY_GENERAL, Constants.CFG_WAILA_FONTCOLOR, 0xA0A0A0);
+        OverlayConfig.uncolored = 0 + ConfigHandler.instance().getConfig(Configuration.CATEGORY_GENERAL, Constants.CFG_WAILA_WHITE, 0xFFFFFF);
     }
 
     public static String toHex(Color color) {

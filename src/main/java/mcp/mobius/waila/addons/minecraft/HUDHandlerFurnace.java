@@ -19,42 +19,97 @@ public class HUDHandlerFurnace implements IWailaDataProvider {
     @Nonnull
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        if (!config.getConfig("vanilla.furnacedisplay") || accessor.getBlock() != Blocks.LIT_FURNACE)
+        if (!config.getConfig("vanilla.furnacedisplay") || accessor.getBlock() != Blocks.LIT_FURNACE) {
+            NBTTagList itemTag = accessor.getNBTData().getTagList("Items", 10);
+            ItemStack[] inventory = new ItemStack[3];
+            for (int i = 0; i < itemTag.tagCount(); i++) {
+                NBTTagCompound tagCompound = itemTag.getCompoundTagAt(i);
+                byte slot = tagCompound.getByte("Slot");
+                ItemStack stack = new ItemStack(tagCompound);
+                inventory[slot] = stack;
+            }
+
+            if (inventory[1] == null && inventory[2] == null)
+                return currenttip;
+
+            String renderOff = "";
+            if (inventory[1] != null) {
+                String name = inventory[1].getItem().getRegistryName().toString();
+                renderOff += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[1].getCount()), String.valueOf(inventory[1].getItemDamage()));
+            } else renderOff += SpecialChars.getRenderString("waila.stack", "2");
+
+            if (inventory[2] != null) {
+                String name = inventory[2].getItem().getRegistryName().toString();
+                renderOff += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[2].getCount()), String.valueOf(inventory[2].getItemDamage()));
+            } else renderOff += SpecialChars.getRenderString("waila.stack", "2");
+
+            currenttip.add(renderOff);
             return currenttip;
-
-        int cookTime = accessor.getNBTData().getShort("CookTime");
-
-        NBTTagList itemTag = accessor.getNBTData().getTagList("Items", 10);
-        ItemStack[] inventory = new ItemStack[3];
-        for (int i = 0; i < itemTag.tagCount(); i++) {
-            NBTTagCompound tagCompound = itemTag.getCompoundTagAt(i);
-            byte slot = tagCompound.getByte("Slot");
-            ItemStack stack = new ItemStack(tagCompound);
-            inventory[slot] = stack;
         }
+        else {
+            int cookTime = accessor.getNBTData().getShort("CookTime");
 
-        String renderStr = "";
+            if (cookTime == 0)
+            {
+                NBTTagList itemTag = accessor.getNBTData().getTagList("Items", 10);
+                ItemStack[] inventory = new ItemStack[3];
+                for (int i = 0; i < itemTag.tagCount(); i++) {
+                    NBTTagCompound tagCompound = itemTag.getCompoundTagAt(i);
+                    byte slot = tagCompound.getByte("Slot");
+                    ItemStack stack = new ItemStack(tagCompound);
+                    inventory[slot] = stack;
+                }
 
-        if (inventory[0] != null) {
-            String name = inventory[0].getItem().getRegistryName().toString();
-            renderStr += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[0].getCount()), String.valueOf(inventory[0].getItemDamage()));
-        } else renderStr += SpecialChars.getRenderString("waila.stack", "2");
+                String renderOff = "";
+                if (inventory[1] != null) {
+                    String name = inventory[1].getItem().getRegistryName().toString();
+                    renderOff += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[1].getCount()), String.valueOf(inventory[1].getItemDamage()));
+                } else renderOff += SpecialChars.getRenderString("waila.stack", "2");
 
-        if (inventory[1] != null) {
-            String name = inventory[1].getItem().getRegistryName().toString();
-            renderStr += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[1].getCount()), String.valueOf(inventory[1].getItemDamage()));
-        } else renderStr += SpecialChars.getRenderString("waila.stack", "2");
+                if (inventory[2] != null) {
+                    String name = inventory[2].getItem().getRegistryName().toString();
+                    renderOff += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[2].getCount()), String.valueOf(inventory[2].getItemDamage()));
+                } else renderOff += SpecialChars.getRenderString("waila.stack", "2");
 
-        renderStr += SpecialChars.getRenderString("waila.progress", String.valueOf(cookTime), String.valueOf(200));
+                currenttip.add(renderOff);
+                return currenttip;
 
-        if (inventory[2] != null) {
-            String name = inventory[2].getItem().getRegistryName().toString();
-            renderStr += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[2].getCount()), String.valueOf(inventory[2].getItemDamage()));
-        } else renderStr += SpecialChars.getRenderString("waila.stack", "2");
+            } else
+                {
 
-        currenttip.add(renderStr);
+                NBTTagList itemTag = accessor.getNBTData().getTagList("Items", 10);
+                ItemStack[] inventory = new ItemStack[3];
+                for (int i = 0; i < itemTag.tagCount(); i++) {
+                    NBTTagCompound tagCompound = itemTag.getCompoundTagAt(i);
+                    byte slot = tagCompound.getByte("Slot");
+                    ItemStack stack = new ItemStack(tagCompound);
+                    inventory[slot] = stack;
+                }
 
-        return currenttip;
+                String renderStr = "";
+
+                if (inventory[0] != null) {
+                    String name = inventory[0].getItem().getRegistryName().toString();
+                    renderStr += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[0].getCount()), String.valueOf(inventory[0].getItemDamage()));
+                } else renderStr += SpecialChars.getRenderString("waila.stack", "2");
+
+                if (inventory[1] != null) {
+                    String name = inventory[1].getItem().getRegistryName().toString();
+                    renderStr += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[1].getCount()), String.valueOf(inventory[1].getItemDamage()));
+                } else renderStr += SpecialChars.getRenderString("waila.stack", "2");
+
+                renderStr += SpecialChars.getRenderString("waila.progress", String.valueOf(cookTime), String.valueOf(200));
+
+                if (inventory[2] != null) {
+                    String name = inventory[2].getItem().getRegistryName().toString();
+                    renderStr += SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(inventory[2].getCount()), String.valueOf(inventory[2].getItemDamage()));
+                } else renderStr += SpecialChars.getRenderString("waila.stack", "2");
+
+                currenttip.add(renderStr);
+
+                return currenttip;
+            }
+        }
     }
 
     @Nonnull

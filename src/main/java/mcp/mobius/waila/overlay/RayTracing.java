@@ -64,7 +64,7 @@ public class RayTracing {
     public RayTraceResult rayTrace(Entity entity, double playerReach, float partialTicks) {
         Vec3d eyePosition = entity.getPositionEyes(partialTicks);
         Vec3d lookVector = entity.getLook(partialTicks);
-        Vec3d traceEnd = eyePosition.addVector(lookVector.x * playerReach, lookVector.y * playerReach, lookVector.z * playerReach);
+        Vec3d traceEnd = eyePosition.add(lookVector.x * playerReach, lookVector.y * playerReach, lookVector.z * playerReach);
 
         return entity.getEntityWorld().rayTraceBlocks(eyePosition, traceEnd, ConfigHandler.instance().getConfig(Configuration.CATEGORY_GENERAL, Constants.CFG_WAILA_LIQUID, true));
     }
@@ -140,7 +140,7 @@ public class RayTracing {
         ItemStack pick = mouseoverBlock.getPickBlock(world.getBlockState(pos), target, world, pos, player);
         //noinspection ConstantConditions
         if (pick == null)
-            throw new NullPointerException(mouseoverBlock.getRegistryName() + " from mod " + ModIdentification.findModContainer(mouseoverBlock.getRegistryName().getResourceDomain()).getName() + " returned a null ItemStack in getPickBlock(...). Please report this to them.");
+            throw new NullPointerException(mouseoverBlock.getRegistryName() + " from mod " + ModIdentification.findModContainer(mouseoverBlock.getRegistryName().getNamespace()).getName() + " returned a null ItemStack in getPickBlock(...). Please report this to them.");
 
         if (!pick.isEmpty())
             items.add(pick);

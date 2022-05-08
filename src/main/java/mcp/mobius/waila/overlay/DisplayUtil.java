@@ -185,7 +185,7 @@ public class DisplayUtil {
         if (namelist.get(0) == null || namelist.get(0).equals(""))
             namelist.set(0, "Unnamed");
 
-        namelist.set(0, itemstack.getRarity().rarityColor.toString() + namelist.get(0));
+        namelist.set(0, itemstack.getRarity().color.toString() + namelist.get(0));
         for (int i = 1; i < namelist.size(); i++)
             namelist.set(i, namelist.get(i));
 

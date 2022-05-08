@@ -70,7 +70,7 @@ public class HUDHandlerEntities implements IWailaEntityProvider {
         if (entityEntry == null)
             return "Unknown";
 
-        ModContainer container = ModIdentification.findModContainer(entityEntry.getRegistryName().getResourceDomain());
+        ModContainer container = ModIdentification.findModContainer(entityEntry.getRegistryName().getNamespace());
         return container.getName();
     }
 }

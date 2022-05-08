@@ -38,10 +38,17 @@ minecraft {
 
 repositories {
     maven { url "http://dvs1.progwml6.com/files/maven" }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.7.11.102"
+    deobfCompile "mezz.jei:jei_1.12.2:4.14.1.234"
+    deobfCompile "curse.maven:enderio-64578:3328811"
+    deobfCompile "curse.maven:endercore-231868:2972849"
+    deobfCompile "curse.maven:tesla-244651:2487962"
+    deobfCompile "curse.maven:redstoneflux-270789:2920436"
 }
 
 processResources{
